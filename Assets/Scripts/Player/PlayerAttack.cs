@@ -18,7 +18,14 @@ public class PlayerAttack : MonoBehaviour
         if (other.gameObject.CompareTag("Enemy"))
         {
             other.GetComponent<EnemyHealth>().DamageEnemy(damage);
-            //print(2342);
+            if(transform.localScale.x > 0)
+            {
+                other.GetComponent<EnemyHealth>().GetHit(Vector2.right);
+            }
+            else
+            {
+                other.GetComponent<EnemyHealth>().GetHit(Vector2.left);
+            }
         }
     }
 

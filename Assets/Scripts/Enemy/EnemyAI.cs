@@ -53,15 +53,17 @@ public class EnemyAI : MonoBehaviour
     private Rigidbody2D rb;
     private Transform player;
     private EnemyAttack ea;
+    private EnemyHealth enemyHealth;
 
     private float lastTime;
     private bool isAttacking = false;
     private bool canMove = true;
     private bool canFilp = true;
+    public bool isStoic = false;
     private float distanceToPlayer; //距离玩家距离
     private Vector2 direction;
     private float xSignDirection; //符号化方向
-    private int face = 1; // 朝向，正1，反-1；
+    //private int face = 1; // 朝向，正1，反-1；
     private bool isPlayerMoving;
     private float eps = 1.984e-07f;
 
@@ -81,6 +83,7 @@ public class EnemyAI : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         player = GameObject.FindGameObjectWithTag("Player").transform;
         ea = GetComponent<EnemyAttack>();
+        enemyHealth = GetComponent<EnemyHealth>();
     }
 
     private void Update()
@@ -105,7 +108,7 @@ public class EnemyAI : MonoBehaviour
         if (!canMove) rb.velocity = new Vector2(0f, rb.velocity.y);
 
         // 根据距离切换状态
-        if (!isAttacking)
+        if (!isAttacking && !enemyHealth.isHit)
         {
             
             Filp();
@@ -204,12 +207,13 @@ public class EnemyAI : MonoBehaviour
         }
         else if (x == 1)//前进喷泉
         {
+            isStoic = true;
             a1LastTime = Time.time;
             canFilp = false;
             animator.SetTrigger("前进喷泉");
 
             // 初始爆发速度
-            float initialSpeed = 20f * face;
+            float initialSpeed = 20f * transform.localScale.x;
             float timer = 0f;
             float duration = 1f; // 1秒内减速到0
 
@@ -225,6 +229,7 @@ public class EnemyAI : MonoBehaviour
 
             rb.velocity = new Vector2(0, rb.velocity.y); // 确保最终速度为0
             canFilp = true;
+            isStoic = false;
         }
         else if(x == 2)
         {
@@ -234,13 +239,16 @@ public class EnemyAI : MonoBehaviour
             animator.SetTrigger("三角剑");
 
             //飞行物翻转
-            Quaternion rotation = Quaternion.Euler(0, face == 1 ? 0 : 180, 0);
+            Quaternion rotation = Quaternion.Euler(0, transform.localScale.x == 1 ? 0 : 180, 0);
 
             yield return new WaitForSeconds(forwardShakeTime[x]); //前摇
             //print(forwardShakeTime[x]);
-
-            GameObject projectile = Instantiate(projectilePrefab, attackPoint.position, rotation);
-            projectile.GetComponent<Rigidbody2D>().velocity = new Vector2(face * projectileSpeed, 0f);
+            if (!enemyHealth.isHit)
+            {
+                GameObject projectile = Instantiate(projectilePrefab, attackPoint.position, rotation);
+                projectile.GetComponent<Rigidbody2D>().velocity = new Vector2(transform.localScale.x * projectileSpeed, 0f);
+            }
+           
 
             yield return new WaitForSeconds(backShakeTime[x]);
             canFilp = true;
@@ -248,6 +256,7 @@ public class EnemyAI : MonoBehaviour
         }
         else if(x == 3)
         {
+            isStoic = true;
             a3LastTime = Time.time;
             canFilp = false;
             canMove = false;
@@ -255,6 +264,7 @@ public class EnemyAI : MonoBehaviour
             yield return new WaitForSeconds(backShakeTime[x]);
             canFilp = true;
             canMove = true;
+            isStoic = false;
         }
         isAttacking = false;
         canMove = true;
@@ -269,13 +279,14 @@ public class EnemyAI : MonoBehaviour
         {
             if (xSignDirection < 0)
             {
-                face = -1;
-                transform.localRotation = Quaternion.Euler(0, 180, 0);
+                //face = -1;
+                //transform.localRotation = Quaternion.Euler(0, 180, 0);
+                transform.localScale = new Vector3(-1, 1, 1);
             }
             else
             {
-                face = 1;
-                transform.localRotation = Quaternion.Euler(0, 0, 0);
+                //face = 1;
+                transform.localScale = new Vector3(1, 1, 1);
             }
         }
     }
@@ -288,7 +299,7 @@ public class EnemyAI : MonoBehaviour
         while (Time.time - startTime < time)
         {
             
-            rb.velocity = new Vector2(face * runSpeed, 0);
+            rb.velocity = new Vector2(transform.localScale.x * runSpeed, 0);
             yield return null; //好像可以更新Time.time
 
         }
@@ -302,17 +313,20 @@ public class EnemyAI : MonoBehaviour
         switch (currentState)
         {
             case EnemyState.idle:
+                if (enemyHealth.isHit) return;
                 rb.velocity = Vector2.zero;
                 canFilp = true;
                 break;
 
             case EnemyState.walk:
-                if (!canMove) return;              
+                if (!canMove) return;
+                if (enemyHealth.isHit) return;
                 canFilp = true;
                 break;
 
             case EnemyState.run:
                 if (!canMove) return;
+                if (enemyHealth.isHit) return;
                 canFilp = true;
 
                 moveCoroutine = StartCoroutine(PreformMove(0, 0.5f));

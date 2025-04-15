@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.XR;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -16,6 +17,13 @@ public class PlayerController : MonoBehaviour
     private BoxCollider2D feetCol;
     //private PlayerHealth playerHealth;
 
+    private int comboStep;
+    public float interval = 0.1f;
+    private float timer;
+    private bool isAttack = false;
+    public float attackSpeed; //攻击的补偿速度 
+
+
 
 
     void Start()
@@ -28,8 +36,16 @@ public class PlayerController : MonoBehaviour
     //走
     void Run()
     {
-        float movedir = Input.GetAxisRaw("Horizontal");
-        rb.velocity = new Vector2(movedir * runSpeed, rb.velocity.y);
+        if (!isAttack)
+        {
+            float movedir = Input.GetAxisRaw("Horizontal");
+            rb.velocity = new Vector2(movedir * runSpeed, rb.velocity.y);
+        }
+        else
+        {
+            rb.velocity = new Vector2(transform.localScale.x * attackSpeed, rb.velocity.y);
+        }
+
     }
     //行走动画
     void WalkAnim()
@@ -74,11 +90,13 @@ public class PlayerController : MonoBehaviour
     {
         if(rb.velocity.x > eps)
         {
-            transform.localRotation = Quaternion.Euler(0, 0, 0);
+            //transform.localRotation = Quaternion.Euler(0, 0, 0);
+            transform.localScale = new Vector3(1, 1, 1);
         }
         else if(rb.velocity.x < -eps)
         {
-            transform.localRotation = Quaternion.Euler(0, 180, 0);
+            //transform.localRotation = Quaternion.Euler(0, 180, 0);
+            transform.localScale = new Vector3(-1, 1, 1);
         }  
 
     }
@@ -91,6 +109,7 @@ public class PlayerController : MonoBehaviour
     //跳
     void Jump()
     {
+        if (isAttack) return;
         if(isGround && Input.GetButtonDown("Jump"))
         {
             rb.velocity = new Vector2(rb.velocity.x, jumpSpeed);
@@ -99,12 +118,33 @@ public class PlayerController : MonoBehaviour
     //攻击
     void Attack()
     {
-        if (Input.GetButtonDown("Attack") && !anim.GetCurrentAnimatorStateInfo(0).IsName("attack"))
+        if (Input.GetButtonDown("Attack") && !isAttack)
         {
-            AttackAnim();
-            //print(anim.GetCurrentAnimatorStateInfo(0).IsName("attack"));
+            isAttack = true;
+            comboStep++;
+            if (comboStep > 4) comboStep = 1;
+            timer = interval;
+            anim.SetTrigger("Attack");
+            anim.SetInteger("ComboStep", comboStep);
+            //print(44);
+        }
+
+        if(timer != 0)
+        {
+            timer -= Time.deltaTime;
+            if(timer < 0f)
+            {
+                timer = 0f;
+                comboStep = 0;
+            }
         }
     }
+
+    public void AttackOver()
+    {
+        isAttack = false;
+    }
+
     //自伤
     void SelfInjury()
     {
