@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Net;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class EnemyHealth : MonoBehaviour
@@ -19,6 +20,10 @@ public class EnemyHealth : MonoBehaviour
     private Rigidbody2D rb;
     private EnemyAI enemyAI;
 
+    //ÆøÅÝ
+    public GameObject floatPoint;
+    public Transform floatPos;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -34,6 +39,12 @@ public class EnemyHealth : MonoBehaviour
     {
         hitAnimator.SetTrigger("Hit");
         currentHealth -= damage;
+        float yVal = Random.Range(-1.5f, -2.5f), xVal = Random.Range(-1f, 0.6f);
+        Vector3 floatPos = new Vector3(transform.position.x + xVal, transform.position.y + yVal, transform.position.z);
+        
+        
+        GameObject gb = Instantiate(floatPoint, floatPos, Quaternion.identity);
+        gb.transform.GetChild(0).GetComponent<TextMesh>().text = damage.ToString();
         if (currentHealth <= 0)
         {
             currentHealth = 0;
