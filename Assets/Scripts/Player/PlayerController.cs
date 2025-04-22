@@ -1,6 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.XR;
+//using UnityEditor.XR;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -15,7 +15,6 @@ public class PlayerController : MonoBehaviour
     private float eps = Mathf.Epsilon;
     private bool isGround = true; //判定接触地面否
     private BoxCollider2D feetCol;
-    //private PlayerHealth playerHealth;
 
     private int comboStep;
     public float interval = 0.1f;
