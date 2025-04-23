@@ -35,7 +35,7 @@ public class EnemyAttack : MonoBehaviour
             }
             else
             {
-                other.GetComponent<PlayerHealth>().DamagePlayer(damage);
+                //other.GetComponent<PlayerHealth>().DamagePlayer(damage);
             }
         }
     }
@@ -99,7 +99,7 @@ public class EnemyAttack : MonoBehaviour
         {
             if (other == null) break;
 
-            other.GetComponent<PlayerHealth>().DamagePlayer(damage);
+            //other.GetComponent<PlayerHealth>().DamagePlayer(damage);
 
             yield return new WaitForSeconds(_damageInterval);
             //print(damage);

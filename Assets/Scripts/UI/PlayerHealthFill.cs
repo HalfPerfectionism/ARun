@@ -7,6 +7,7 @@ public class PlayerHealthFill : MonoBehaviour
 {
     private Image playerHealthFill;
     public Text text;
+    public Character player;
 
     void Start()
     {
@@ -16,8 +17,8 @@ public class PlayerHealthFill : MonoBehaviour
 
     void Update()
     {
-        playerHealthFill.fillAmount = (float)PlayerHealth.currentHealth / (float)PlayerHealth.maxHealth;
-        text.text = PlayerHealth.currentHealth.ToString() + " / " +
-            PlayerHealth.maxHealth.ToString();
+        playerHealthFill.fillAmount = (float)player.currentHealth / (float)player.maxHealth;
+        text.text = player.currentHealth.ToString() + " / " +
+            player.maxHealth.ToString();
     }
 }

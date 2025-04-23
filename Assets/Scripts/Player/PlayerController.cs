@@ -5,31 +5,35 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    private Rigidbody2D rb;
-    [SerializeField]
-    private float runSpeed = 5;
-    [SerializeField]
-    private float jumpSpeed = 5;
+    
 
-    private Animator anim;
-    private float eps = Mathf.Epsilon;
-    private bool isGround = true; //判定接触地面否
-    private BoxCollider2D feetCol;
-
-    private int comboStep;
-    public float interval = 0.1f;
-    private float timer;
-    private bool isAttack = false;
+    [Header("基础数值")]
+    public float runSpeed = 5;
+    public float jumpSpeed = 5;
+    public float interval = 0.1f; // 普攻的连续时间
     public float attackSpeed; //攻击的补偿速度 
 
+    [Header("参数")]
+    private int comboStep;
+    private float eps = Mathf.Epsilon;
+    private float timer;
 
+    [Header("组件")]
+    private Animator anim;
+    private PhysicsCheck physicsCheck;
+    private Rigidbody2D rb;
+    private Character character;
 
+    [Header("状态")]
+    private bool isAttack = false;
+ 
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
-        feetCol = GetComponent<BoxCollider2D>();
+        physicsCheck = GetComponent<PhysicsCheck>();
+        character = GetComponent<Character>();
     }
 
     //走
@@ -54,7 +58,7 @@ public class PlayerController : MonoBehaviour
     //跳跃动画
     void JumpAnim()
     {
-        if (!isGround)
+        if (!physicsCheck.isGround)
         {
             anim.SetBool("isAir", true);
             if(rb.velocity.y > -eps)
@@ -99,17 +103,12 @@ public class PlayerController : MonoBehaviour
         }  
 
     }
-    void CheckIsGround()
-    {
-        isGround = feetCol.IsTouchingLayers(LayerMask.GetMask("Ground"));
-
-    }
 
     //跳
     void Jump()
     {
         if (isAttack) return;
-        if(isGround && Input.GetButtonDown("Jump"))
+        if(physicsCheck.isGround && Input.GetButtonDown("Jump"))
         {
             rb.velocity = new Vector2(rb.velocity.x, jumpSpeed);
         }
@@ -138,30 +137,32 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
-
     public void AttackOver()
     {
         isAttack = false;
-    }
+    } //动画调用
 
-    //自伤
-    void SelfInjury()
+    //角色死亡
+    public void PlayerDead()
     {
-        if (Input.GetKeyDown(KeyCode.K))
+        if (character.isDead)
         {
-            PlayerHealth.instance.DamagePlayer(10);
+            rb.velocity = new Vector2(0f, rb.velocity.y);
+            transform.GetComponent<CapsuleCollider2D>().enabled = false;
+            Destroy(transform.gameObject, 1f);
+            return;
         }
     }
 
+
     void Update()
     {
+        PlayerDead();
         Run();
         Filp();
         WalkAnim();
-        CheckIsGround();
         Jump();
         JumpAnim();
         Attack();
-        SelfInjury();
     }
 }

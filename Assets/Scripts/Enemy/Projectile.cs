@@ -24,7 +24,7 @@ public class Projectile : MonoBehaviour
             collision.GetType().ToString() == "UnityEngine.CapsuleCollider2D")
         {
             Explode();
-            collision.GetComponent<PlayerHealth>().DamagePlayer(damage);
+            //collision.GetComponent<PlayerHealth>().DamagePlayer(damage);
         }
     }
 
