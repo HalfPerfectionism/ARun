@@ -20,12 +20,15 @@ public class Character : MonoBehaviour
     public GameObject floatPoint;
     //使用事件
     public UnityEvent<Transform> OnTakeDamage;
+    public UnityEvent<Character> OnHealthChange; 
+
     //public UnityEvent OnDie;
 
 
     void Start()
     {
         currentHealth = maxHealth;
+        OnHealthChange?.Invoke(this);
     }
 
     private void Update()
@@ -60,6 +63,7 @@ public class Character : MonoBehaviour
         TriggerInvulnearable();
         //执行事件,加个问号代表询问列表有没有函数
         OnTakeDamage?.Invoke(attacker.transform);
+        OnHealthChange?.Invoke(this);
 
     }
 
