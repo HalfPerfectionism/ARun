@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Enemies
+  m_EditorClassIdentifier: 
+  m_GroupName: Enemies
+  m_Data:
+    m_SerializedData: []
+  m_GUID: bbf5d6280ec3c354098f2678b0682a71
+  m_SerializeEntries:
+  - m_GUID: f0e46536740207b4a9235b94f9a4be43
+    m_Address: "\u73AB\u7470\u9A91\u58EB"
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 4aa15a5812e1ef14cbeba3b32e62e6f8
+    m_Address: Goblin
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 7abc2c04b15d92b49931e985af69395e, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 323feb19327901f43af1509c3c1299bb, type: 2}
+    - {fileID: 11400000, guid: 3cf496c80a2d1ae498004369fedd09ea, type: 2}

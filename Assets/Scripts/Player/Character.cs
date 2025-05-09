@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class Character : MonoBehaviour
+public class Character : MonoBehaviour, ISaveable
 {
     [Header("数值")]
     public int currentHealth;
@@ -20,15 +20,24 @@ public class Character : MonoBehaviour
     public GameObject floatPoint;
     //使用事件
     public UnityEvent<Transform> OnTakeDamage;
-    public UnityEvent<Character> OnHealthChange; 
+    public UnityEvent<Character> OnHealthChange;
 
-    //public UnityEvent OnDie;
+    //存档
+    //public DataDefination dataDefination;
 
 
-    void Start()
+    private void OnEnable()
     {
         currentHealth = maxHealth;
         OnHealthChange?.Invoke(this);
+        ISaveable saveable = this;
+        saveable.RegisterSaveData();
+    }
+
+    private void OnDisable()
+    {
+        ISaveable saveable = this;
+        saveable.UnRegisterSaveData();
     }
 
     private void Update()
@@ -78,4 +87,29 @@ public class Character : MonoBehaviour
         }
     }
 
+    public DataDefination GetDataID()
+    {
+        return GetComponent<DataDefination>(); 
+        
+    }
+
+    public void SaveData(Data data)
+    {
+        print(GetDataID().ID);
+        if (data.characterPosDict.ContainsKey(GetDataID().ID))
+            data.characterPosDict[GetDataID().ID] = transform.position;
+        else
+        {
+            data.characterPosDict.Add(GetDataID().ID, transform.position);
+        }
+
+    }
+
+    public void LoadData(Data data)
+    {
+        if (data.characterPosDict.ContainsKey(GetDataID().ID))
+        {
+            transform.position = data.characterPosDict[GetDataID().ID]; 
+        }
+    }
 }

@@ -18,6 +18,7 @@ public class Attack : MonoBehaviour
     {
         //加个？如果没有就返回null
         collision.GetComponent<Character>()?.TakeDamage(this);
+        //print(collision);
     }
 
 }

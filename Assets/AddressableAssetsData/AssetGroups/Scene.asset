@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Scene
+  m_EditorClassIdentifier: 
+  m_GroupName: Scene
+  m_Data:
+    m_SerializedData: []
+  m_GUID: bc0b3f5552e17144f820e8d005af9930
+  m_SerializeEntries:
+  - m_GUID: 2cda990e2423bbf4892e6590ba056729
+    m_Address: Grass
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 64579dce33ba13b4ea1b63d9d23cef60
+    m_Address: Persistent
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: d49d5f68e4bad2842b62c8d3cbbc08fc
+    m_Address: TestScene
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: a88d92d1cb5a2f649818dd27925e947c
+    m_Address: Menu
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 7abc2c04b15d92b49931e985af69395e, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 9e105129518e7c94f89dc9afa69a68af, type: 2}
+    - {fileID: 11400000, guid: 49afca587be47994f97469a1c13e8f1b, type: 2}
