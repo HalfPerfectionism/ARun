@@ -5,19 +5,16 @@ using UnityEngine;
 public class DataDefination : MonoBehaviour
 {
     public string ID;
-    //public PersistentType persistentType;
 
     //private void OnValidate()
     //{
-    //    if(persistentType == PersistentType.RW)
-    //        if (ID == string.Empty)
-    //            ID = System.Guid.NewGuid().ToString(); //GUID唯一ID
-    //    else
-    //        ID = string.Empty;
+    //    if (ID == string.Empty)
+    //        ID = System.Guid.NewGuid().ToString(); //GUID唯一ID
     //}
-    private void OnValidate()
+    private void Start()
     {
         if (ID == string.Empty)
             ID = System.Guid.NewGuid().ToString(); //GUID唯一ID
     }
+
 }

@@ -25,18 +25,31 @@ public class DataManager : MonoBehaviour
         {
             Save();
         }
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            Load();
+        }
     }
 
 
-    public void RegisterSaveData(ISaveable saveable)
+    public bool RegisterSaveData(ISaveable saveable)
     {
-        if(!saveableList.Contains(saveable))
+        if (!saveableList.Contains(saveable))
+        {
             saveableList.Add(saveable);
+            return true;
+        }
+        return false;
     }
 
-    public void UnRegisterSaveData(ISaveable saveable)
+    public bool UnRegisterSaveData(ISaveable saveable)
     {
-        saveableList.Remove(saveable);
+        if (saveableList.Contains(saveable))
+        {
+            saveableList.Remove(saveable);
+            return true;
+        }
+        return false;
     }
 
     //´æµµ
@@ -56,7 +69,10 @@ public class DataManager : MonoBehaviour
     //¶Áµµ
     public void Load()
     {
-
+        foreach(var item in saveableList)
+        {
+            item.LoadData(data);
+        }
     }
 
 }

@@ -23,15 +23,18 @@ public class Character : MonoBehaviour, ISaveable
     public UnityEvent<Character> OnHealthChange;
 
     //´æµµ
-    //public DataDefination dataDefination;
+    public DataDefination dataDefination;
+    public PhysicsCheck check;
 
 
     private void OnEnable()
     {
         currentHealth = maxHealth;
         OnHealthChange?.Invoke(this);
+        //dataDefination = GetComponent<DataDefination>();
+        check = GetComponent<PhysicsCheck>();
         ISaveable saveable = this;
-        saveable.RegisterSaveData();
+        saveable.RegisterSaveData(); 
     }
 
     private void OnDisable()
@@ -51,6 +54,10 @@ public class Character : MonoBehaviour, ISaveable
                 invulnearableCounter = 0f;
             }
         }
+        //if (Input.GetKeyDown(KeyCode.V))
+        //{
+        //    print(dataDefination);
+        //}
     }
 
     public void TakeDamage(Attack attacker)
@@ -90,12 +97,12 @@ public class Character : MonoBehaviour, ISaveable
     public DataDefination GetDataID()
     {
         return GetComponent<DataDefination>(); 
-        
+   
     }
 
     public void SaveData(Data data)
     {
-        print(GetDataID().ID);
+        print(GetDataID());
         if (data.characterPosDict.ContainsKey(GetDataID().ID))
             data.characterPosDict[GetDataID().ID] = transform.position;
         else

@@ -6,8 +6,8 @@ using UnityEngine;
 public interface ISaveable 
 {
     DataDefination GetDataID();
-    void RegisterSaveData() => DataManager.instance.RegisterSaveData(this);
-    void UnRegisterSaveData() => DataManager.instance.UnRegisterSaveData(this);
+    bool RegisterSaveData() { return DataManager.instance.RegisterSaveData(this); }
+    bool UnRegisterSaveData() { return DataManager.instance.UnRegisterSaveData(this); } 
     void SaveData(Data data);
     void LoadData(Data data);
 
