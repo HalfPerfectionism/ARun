@@ -7,7 +7,7 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.ResourceManagement.ResourceProviders;
 using UnityEngine.SceneManagement;
 
-public class SceneLoad : MonoBehaviour
+public class SceneLoad : MonoBehaviour, ISaveable
 {
     //第一个场景，的信息
     public GameSceneSO firstLoadScene;
@@ -50,6 +50,8 @@ public class SceneLoad : MonoBehaviour
     {
         sceneLoadEventSO.loadRequestEvent += OnLoadRequestEvent;
         newGameEvent.OnEventRaised += NewGame;
+        ISaveable saveable = this;
+        saveable.RegisterSaveData();
         //sceneLoadEventSO.RaiseLoadRequestEvent(menuScene, menuPlayerPos, true);
     }
 
@@ -57,6 +59,8 @@ public class SceneLoad : MonoBehaviour
     {
         sceneLoadEventSO.loadRequestEvent -= OnLoadRequestEvent; 
         newGameEvent.OnEventRaised -= NewGame;
+        ISaveable saveable = this;
+        saveable.UnRegisterSaveData();
     }
 
     private void OnLoadRequestEvent(GameSceneSO _locationToGo, Vector3 _posToGo, bool _fadeScreen)
@@ -123,5 +127,26 @@ public class SceneLoad : MonoBehaviour
             playerUI.gameObject.SetActive(true);
          
         isLoading = false;
+    }
+
+    public DataDefination GetDataID()
+    {
+       return GetComponent<DataDefination>();
+    }
+
+    public void SaveData(Data data)
+    {
+        data.SaveGameScene(currentLoadScene);
+    }
+
+    public void LoadData(Data data)
+    {
+        var playerID = playerTrans.GetComponent<DataDefination>().ID;
+        if (data.characterPosDict.ContainsKey(playerID))
+        {
+            locationToGo = data.GetSaveScene();
+            var playerPos = data.characterPosDict[playerID].ToVector3();
+            OnLoadRequestEvent(locationToGo, playerPos, true);
+        }
     }
 }

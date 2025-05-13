@@ -75,6 +75,7 @@ GameObject:
   - component: {fileID: 754029710809692231}
   - component: {fileID: 754029710809692233}
   - component: {fileID: 754029710809692230}
+  - component: {fileID: 1039402484}
   m_Layer: 7
   m_Name: Goblin
   m_TagString: Untagged
@@ -280,6 +281,11 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  OnHealthChange:
+    m_PersistentCalls:
+      m_Calls: []
+  dataDefination: {fileID: 0}
+  check: {fileID: 0}
 --- !u!114 &754029710809692230
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -295,3 +301,16 @@ MonoBehaviour:
   damage: 100
   attackRange: 0
   attackRate: 0
+--- !u!114 &1039402484
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 754029710809692222}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eaa747f35239d104f81a3e16989ededb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ID: 

@@ -1,6 +1,11 @@
+using Newtonsoft.Json;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
+
+//保证在加载之前读取进度
+[DefaultExecutionOrder(-100)]
 
 public class DataManager : MonoBehaviour
 {
@@ -11,12 +16,19 @@ public class DataManager : MonoBehaviour
     private List<ISaveable> saveableList = new List<ISaveable>();
     private Data data;
 
+    //持久化
+    private string jsonFolder;
+
     private void Awake()
     {
         if (instance == null) instance = this;
         else Destroy(this.gameObject);
 
         data = new Data(); //data没有继承mono 
+        jsonFolder = Application.persistentDataPath + "/SAVE_DATA/";
+        print(Application.persistentDataPath);
+
+        ReadSaveData();
     }
 
     private void Update()
@@ -60,18 +72,41 @@ public class DataManager : MonoBehaviour
             item.SaveData(data);
         }
 
-        foreach (var item in data.characterPosDict)
-        {
-            print(item.Key + " " + item.Value);
-        }
+        //foreach (var item in data.characterPosDict)
+        //{
+        //    print(item.Key + " " + item.Value);
+        //}
+        var resultPath = jsonFolder + "data.sav";
+        //将数据转成json文件
+        var jsonData = JsonConvert.SerializeObject(data);
+        //创建路径
+        if(!File.Exists(resultPath))
+            Directory.CreateDirectory(jsonFolder); //路径
+        File.WriteAllText(resultPath, jsonData);
+
     }
 
     //读档
     public void Load()
     {
-        foreach(var item in saveableList)
+        ReadSaveData();
+        foreach (var item in saveableList)
         {
             item.LoadData(data);
+        }
+
+    }
+
+    private void ReadSaveData()
+    {
+        var resultPath = jsonFolder + "data.sav";
+
+        if (File.Exists(resultPath))
+        {
+            //将json转成Class.Data
+            var stringData = File.ReadAllText(resultPath);
+            var jsonData = JsonConvert.DeserializeObject<Data>(stringData);
+            data = jsonData;
         }
     }
 

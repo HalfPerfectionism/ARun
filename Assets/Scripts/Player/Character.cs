@@ -102,13 +102,18 @@ public class Character : MonoBehaviour, ISaveable
 
     public void SaveData(Data data)
     {
-        print(GetDataID());
+        //print(GetDataID());
         if (data.characterPosDict.ContainsKey(GetDataID().ID))
-            data.characterPosDict[GetDataID().ID] = transform.position;
+        {
+            data.characterPosDict[GetDataID().ID] = new SerlializeVector3(transform.position);
+            data.floatSaveData[GetDataID().ID + "health"] = currentHealth;
+        }
         else
         {
-            data.characterPosDict.Add(GetDataID().ID, transform.position);
+            data.characterPosDict.Add(GetDataID().ID, new SerlializeVector3(transform.position));
+            data.floatSaveData.Add(GetDataID().ID + "health", currentHealth);
         }
+        
 
     }
 
@@ -116,7 +121,11 @@ public class Character : MonoBehaviour, ISaveable
     {
         if (data.characterPosDict.ContainsKey(GetDataID().ID))
         {
-            transform.position = data.characterPosDict[GetDataID().ID]; 
+            currentHealth = (int)data.floatSaveData[GetDataID().ID + "health"];
+            transform.position = data.characterPosDict[GetDataID().ID].ToVector3();
+
+            //¸üÐÂUI
+            OnHealthChange?.Invoke(this);
         }
     }
 }
