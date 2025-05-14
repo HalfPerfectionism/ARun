@@ -9,8 +9,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 45a99af64c2e1754fa16fe8a919c9367, type: 3}
-  m_Name: Scene Load Event SO
+  m_Script: {fileID: 11500000, guid: af4581979a867e3408ac34d1eb72d6be, type: 3}
+  m_Name: ReBirthEvent
   m_EditorClassIdentifier: 
-  menuScene: {fileID: 11400000, guid: a755c5645cea5eb49b7281572a4c1825, type: 2}
-  posToGo: {x: -0.000000018626451, y: -0.9965731, z: 0}

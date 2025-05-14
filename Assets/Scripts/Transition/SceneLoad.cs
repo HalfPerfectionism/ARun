@@ -145,8 +145,8 @@ public class SceneLoad : MonoBehaviour, ISaveable
         if (data.characterPosDict.ContainsKey(playerID))
         {
             locationToGo = data.GetSaveScene();
-            var playerPos = data.characterPosDict[playerID].ToVector3();
-            OnLoadRequestEvent(locationToGo, playerPos, true);
+            //var playerPos = data.characterPosDict[playerID].ToVector3();
+            OnLoadRequestEvent(locationToGo, playerTrans.position, true);
         }
     }
 }

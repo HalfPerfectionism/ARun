@@ -8,3 +8,8 @@ public enum PersistentType
 {
     RW, UnRW
 }
+
+public enum CharacterType
+{
+    Player, Friend, Enemey
+}

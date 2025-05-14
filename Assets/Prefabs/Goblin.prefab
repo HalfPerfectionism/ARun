@@ -265,6 +265,7 @@ MonoBehaviour:
   invulnearableCounter: 0
   invulnearable: 0
   isDead: 0
+  characterType: 0
   floatPoint: {fileID: 1688253803472116329, guid: fe34cfa7bd182b74ba1e0f8c7ae759b6, type: 3}
   OnTakeDamage:
     m_PersistentCalls:
@@ -284,6 +285,10 @@ MonoBehaviour:
   OnHealthChange:
     m_PersistentCalls:
       m_Calls: []
+  OnDeath:
+    m_PersistentCalls:
+      m_Calls: []
+  ReBirthEvent: {fileID: 11400000, guid: d09e09c8447c10c4d9a15ab058e9dea3, type: 2}
   dataDefination: {fileID: 0}
   check: {fileID: 0}
 --- !u!114 &754029710809692230
@@ -313,4 +318,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eaa747f35239d104f81a3e16989ededb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ID: 
+  ID: a734ff45-8ad0-4fbd-99c4-018313431f66

@@ -19,6 +19,19 @@ public class DataManager : MonoBehaviour
     //持久化
     private string jsonFolder;
 
+    //用于外部加载进度
+    public VoidEventSO LoadGameEvent;
+
+    private void OnEnable()
+    {
+        LoadGameEvent.OnEventRaised += Load;
+    }
+
+    private void OnDisable()
+    {
+        LoadGameEvent.OnEventRaised -= Load;
+    }
+
     private void Awake()
     {
         if (instance == null) instance = this;
@@ -26,7 +39,7 @@ public class DataManager : MonoBehaviour
 
         data = new Data(); //data没有继承mono 
         jsonFolder = Application.persistentDataPath + "/SAVE_DATA/";
-        print(Application.persistentDataPath);
+        //print(Application.persistentDataPath);
 
         ReadSaveData();
     }
@@ -71,11 +84,10 @@ public class DataManager : MonoBehaviour
         {
             item.SaveData(data);
         }
-
-        //foreach (var item in data.characterPosDict)
-        //{
-        //    print(item.Key + " " + item.Value);
-        //}
+        foreach (var item in saveableList)
+        {
+            print(item);
+        }
         var resultPath = jsonFolder + "data.sav";
         //将数据转成json文件
         var jsonData = JsonConvert.SerializeObject(data);
@@ -94,6 +106,7 @@ public class DataManager : MonoBehaviour
         {
             item.LoadData(data);
         }
+
 
     }
 

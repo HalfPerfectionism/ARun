@@ -149,9 +149,14 @@ public class PlayerController : MonoBehaviour
         {
             rb.velocity = new Vector2(0f, rb.velocity.y);
             transform.GetComponent<CapsuleCollider2D>().enabled = false;
-            Destroy(transform.gameObject, 1f);
+            //Destroy(transform.gameObject, 1f);
             return;
         }
+        else
+        {
+            transform.GetComponent<CapsuleCollider2D>().enabled = true;
+        }
+
     }
 
 

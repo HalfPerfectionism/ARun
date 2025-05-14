@@ -16,7 +16,7 @@ public class Data
     public void SaveGameScene(GameSceneSO gameSceneSO)
     {
         sceneToSave = JsonUtility.ToJson(gameSceneSO);
-        Debug.Log(sceneToSave);
+        
     }
 
     public GameSceneSO GetSaveScene()

@@ -16,31 +16,41 @@ public class Character : MonoBehaviour, ISaveable
     [Header("状态")]
     public bool isDead = false;
 
+    [Header("身份")]
+    public CharacterType characterType;
+
     //气泡
     public GameObject floatPoint;
     //使用事件
     public UnityEvent<Transform> OnTakeDamage;
     public UnityEvent<Character> OnHealthChange;
-
-    //存档
-    public DataDefination dataDefination;
-    public PhysicsCheck check;
+    public UnityEvent OnDeath;
+    public VoidEventSO ReBirthEvent;
 
 
     private void OnEnable()
     {
         currentHealth = maxHealth;
         OnHealthChange?.Invoke(this);
-        //dataDefination = GetComponent<DataDefination>();
-        check = GetComponent<PhysicsCheck>();
         ISaveable saveable = this;
-        saveable.RegisterSaveData(); 
+        saveable.RegisterSaveData();
+        ReBirthEvent.OnEventRaised += ReBirth;
     }
+
 
     private void OnDisable()
     {
         ISaveable saveable = this;
         saveable.UnRegisterSaveData();
+        ReBirthEvent.OnEventRaised -= ReBirth;
+        OnHealthChange?.Invoke(this);
+    }
+    //重生
+    public void ReBirth()
+    {
+        isDead = false;
+        gameObject.SetActive(true);
+        currentHealth = maxHealth;
     }
 
     private void Update()
@@ -73,6 +83,7 @@ public class Character : MonoBehaviour, ISaveable
         {
             currentHealth = 0;
             isDead = true;
+            OnDeath?.Invoke();
             return;
         }
 
@@ -106,12 +117,16 @@ public class Character : MonoBehaviour, ISaveable
         if (data.characterPosDict.ContainsKey(GetDataID().ID))
         {
             data.characterPosDict[GetDataID().ID] = new SerlializeVector3(transform.position);
-            data.floatSaveData[GetDataID().ID + "health"] = currentHealth;
+            if (characterType == CharacterType.Enemey)
+            {
+                print("save: " + transform.position);
+            }
+            data.floatSaveData[GetDataID().ID + "health"] = this.currentHealth;
         }
         else
         {
             data.characterPosDict.Add(GetDataID().ID, new SerlializeVector3(transform.position));
-            data.floatSaveData.Add(GetDataID().ID + "health", currentHealth);
+            data.floatSaveData.Add(GetDataID().ID + "health", this.currentHealth);
         }
         
 
@@ -123,6 +138,10 @@ public class Character : MonoBehaviour, ISaveable
         {
             currentHealth = (int)data.floatSaveData[GetDataID().ID + "health"];
             transform.position = data.characterPosDict[GetDataID().ID].ToVector3();
+            if (characterType == CharacterType.Enemey)
+            {
+                print("load: " + transform.position);
+            }
 
             //更新UI
             OnHealthChange?.Invoke(this);
