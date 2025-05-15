@@ -3,11 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
+using UnityEngine.Events;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.ResourceManagement.ResourceProviders;
 using UnityEngine.SceneManagement;
 
-public class SceneLoad : MonoBehaviour, ISaveable
+public class SceneLoad : MonoBehaviour
 {
     //第一个场景，的信息
     public GameSceneSO firstLoadScene;
@@ -30,16 +31,14 @@ public class SceneLoad : MonoBehaviour, ISaveable
     public Transform playerTrans; // 修改角色坐标
     public GameObject playerUI;
     private bool isLoading; //是否正在加载
-    private GameSceneSO currentLoadScene;
+    public GameSceneSO currentLoadScene;
 
     [Header("广播")]
     public VoidEventSO afterLoadedScene;
+    public UnityEvent OnSceneLoaded;
 
     private void Start()
     {
-        ////异步加载场景
-        ////从SO里获取场景的引用
-        //Addressables.LoadSceneAsync(firstLoadScene.sceneReference,LoadSceneMode.Additive);有点问题先不这么用
 
         sceneLoadEventSO.RaiseLoadRequestEvent(menuScene, menuPlayerPos, true);
         //NewGame();
@@ -50,8 +49,6 @@ public class SceneLoad : MonoBehaviour, ISaveable
     {
         sceneLoadEventSO.loadRequestEvent += OnLoadRequestEvent;
         newGameEvent.OnEventRaised += NewGame;
-        ISaveable saveable = this;
-        saveable.RegisterSaveData();
         //sceneLoadEventSO.RaiseLoadRequestEvent(menuScene, menuPlayerPos, true);
     }
 
@@ -59,11 +56,10 @@ public class SceneLoad : MonoBehaviour, ISaveable
     {
         sceneLoadEventSO.loadRequestEvent -= OnLoadRequestEvent; 
         newGameEvent.OnEventRaised -= NewGame;
-        ISaveable saveable = this;
-        saveable.UnRegisterSaveData();
+
     }
 
-    private void OnLoadRequestEvent(GameSceneSO _locationToGo, Vector3 _posToGo, bool _fadeScreen)
+    public void OnLoadRequestEvent(GameSceneSO _locationToGo, Vector3 _posToGo, bool _fadeScreen)
     {
         if (isLoading) return;
         isLoading = true; 
@@ -122,6 +118,7 @@ public class SceneLoad : MonoBehaviour, ISaveable
         }
         //场景加载完后执行的事件
         afterLoadedScene.RaiseEvent();
+        OnSceneLoaded?.Invoke();
 
         if (currentLoadScene != menuScene)
             playerUI.gameObject.SetActive(true);
@@ -129,24 +126,4 @@ public class SceneLoad : MonoBehaviour, ISaveable
         isLoading = false;
     }
 
-    public DataDefination GetDataID()
-    {
-       return GetComponent<DataDefination>();
-    }
-
-    public void SaveData(Data data)
-    {
-        data.SaveGameScene(currentLoadScene);
-    }
-
-    public void LoadData(Data data)
-    {
-        var playerID = playerTrans.GetComponent<DataDefination>().ID;
-        if (data.characterPosDict.ContainsKey(playerID))
-        {
-            locationToGo = data.GetSaveScene();
-            //var playerPos = data.characterPosDict[playerID].ToVector3();
-            OnLoadRequestEvent(locationToGo, playerTrans.position, true);
-        }
-    }
 }

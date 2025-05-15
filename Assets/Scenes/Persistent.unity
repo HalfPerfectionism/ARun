@@ -1218,6 +1218,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   LoadGameEvent: {fileID: 11400000, guid: 3b6335984e86c55428c224bc284cce62, type: 2}
+  sceneLoad: {fileID: 2027024883}
+  sceneToGo: {fileID: 0}
 --- !u!1 &858089410 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3722395344572098923, guid: 913405c245cf8da469ae6c17da8bb191, type: 3}
@@ -2206,8 +2208,6 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   ReBirthEvent: {fileID: 11400000, guid: d09e09c8447c10c4d9a15ab058e9dea3, type: 2}
-  dataDefination: {fileID: 0}
-  check: {fileID: 0}
 --- !u!114 &1565896495
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2864,7 +2864,11 @@ MonoBehaviour:
   newGameEvent: {fileID: 11400000, guid: 6bd1099476ec5f04bbcd7cebd938cd0a, type: 2}
   playerTrans: {fileID: 1565896477}
   playerUI: {fileID: 820658291}
+  currentLoadScene: {fileID: 0}
   afterLoadedScene: {fileID: 11400000, guid: 8731663a919121a45a19f390c8f9a038, type: 2}
+  OnSceneLoaded:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &2027024884
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -22,6 +22,10 @@ public class DataManager : MonoBehaviour
     //用于外部加载进度
     public VoidEventSO LoadGameEvent;
 
+    //获取当前场景信息，单独处理场景问题
+    public SceneLoad sceneLoad;
+    public GameSceneSO sceneToGo;
+
     private void OnEnable()
     {
         LoadGameEvent.OnEventRaised += Load;
@@ -37,9 +41,9 @@ public class DataManager : MonoBehaviour
         if (instance == null) instance = this;
         else Destroy(this.gameObject);
 
+
         data = new Data(); //data没有继承mono 
         jsonFolder = Application.persistentDataPath + "/SAVE_DATA/";
-        //print(Application.persistentDataPath);
 
         ReadSaveData();
     }
@@ -84,10 +88,9 @@ public class DataManager : MonoBehaviour
         {
             item.SaveData(data);
         }
-        foreach (var item in saveableList)
-        {
-            print(item);
-        }
+
+        data.SaveGameScene(sceneLoad.currentLoadScene);
+
         var resultPath = jsonFolder + "data.sav";
         //将数据转成json文件
         var jsonData = JsonConvert.SerializeObject(data);
@@ -102,12 +105,40 @@ public class DataManager : MonoBehaviour
     public void Load()
     {
         ReadSaveData();
+        sceneToGo = data.GetSaveScene();
+
+        StartCoroutine(LoadDataAndScene());
+
+
+    }
+
+    IEnumerator LoadDataAndScene()
+    {
+        bool isLoaded = false;
+
+        // 使用 AddListener 订阅事件
+        sceneLoad.OnSceneLoaded.AddListener(() =>
+        {
+            isLoaded = true;
+        });
+
+        // 触发场景加载
+        sceneLoad.OnLoadRequestEvent(sceneToGo, transform.position, true);
+
+        // 等待直到场景加载完成
+        yield return new WaitWhile(() => !isLoaded);
+
+        // 清理监听器（重要！避免重复订阅导致的内存泄漏）
+        sceneLoad.OnSceneLoaded.RemoveListener(() =>
+        {
+            isLoaded = true;
+        });
+
+        // 加载数据
         foreach (var item in saveableList)
         {
             item.LoadData(data);
         }
-
-
     }
 
     private void ReadSaveData()
