@@ -27,6 +27,7 @@ public class Character : MonoBehaviour, ISaveable
     public UnityEvent OnDeath;
     public VoidEventSO ReBirthEvent;
 
+    private Animator animator;
 
     private void OnEnable()
     {
@@ -35,6 +36,7 @@ public class Character : MonoBehaviour, ISaveable
         ISaveable saveable = this;
         saveable.RegisterSaveData();
         ReBirthEvent.OnEventRaised += ReBirth;
+        animator = GetComponent<Animator>();
     }
 
 
@@ -64,15 +66,36 @@ public class Character : MonoBehaviour, ISaveable
                 invulnearableCounter = 0f;
             }
         }
-        //if (Input.GetKeyDown(KeyCode.V))
-        //{
-        //    print(dataDefination);
-        //}
+    }
+    //旧版的受伤
+    public void TakeDamageLegacy(int damage)
+    {
+        if (invulnearable) return;
+        if (isDead) return;
+        currentHealth -= damage;
+
+        float yVal = Random.Range(-.5f, .5f), xVal = Random.Range(-0.5f, 0.6f);
+        Vector3 floatPos = new Vector3(transform.position.x + xVal, transform.position.y + yVal, transform.position.z);
+        GameObject gb = Instantiate(floatPoint, floatPos, Quaternion.identity);
+        gb.transform.GetChild(0).GetComponent<TextMesh>().text = damage.ToString();
+        if (currentHealth <= 0)
+        {
+            currentHealth = 0;
+            isDead = true;
+            OnDeath?.Invoke();
+            return;
+        }
+
+        TriggerInvulnearable();
+        //执行事件,加个问号代表询问列表有没有函数
+        //OnTakeDamage?.Invoke(attacker.transform);
+        //OnHealthChange?.Invoke(this);
     }
 
     public void TakeDamage(Attack attacker)
     {
         if (invulnearable) return;
+        if (isDead) return;
         currentHealth -= attacker.damage;
         
         float yVal = Random.Range(-.5f, .5f), xVal = Random.Range(-0.5f, 0.6f);
@@ -91,8 +114,8 @@ public class Character : MonoBehaviour, ISaveable
         //执行事件,加个问号代表询问列表有没有函数
         OnTakeDamage?.Invoke(attacker.transform);
         OnHealthChange?.Invoke(this);
-
     }
+
 
 
     //触发无敌

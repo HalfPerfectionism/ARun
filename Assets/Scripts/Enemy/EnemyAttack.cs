@@ -100,6 +100,7 @@ public class EnemyAttack : MonoBehaviour
             if (other == null) break;
 
             //other.GetComponent<PlayerHealth>().DamagePlayer(damage);
+            other.GetComponent<Character>().TakeDamageLegacy(damage);
 
             yield return new WaitForSeconds(_damageInterval);
             //print(damage);

@@ -13,3 +13,8 @@ public enum CharacterType
 {
     Player, Friend, Enemey
 }
+
+public enum NPCState
+{
+    Idle, Chase, Skill
+}
